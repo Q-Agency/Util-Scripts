@@ -1,0 +1,40 @@
+#!/bin/bash
+
+source fvc.config
+currentVersionPath=`ls -l ${pathFolder}/flutter | cut -d ">" -f2 | rev | cut -d "/" -f3 | rev`
+echo "Current version: $currentVersionPath"; echo "";
+
+availableVersions=($(ls -d ${flutterVersionFolder}/*))
+index=0
+echo "Select the desired version:"
+for i in "${availableVersions[@]}"; do 
+  listedVersion=`echo "$i" | cut -d "/" -f6`
+  echo "[${index}] $listedVersion"
+  (( index ++ ))
+done
+
+read inputVersion
+numRegex="^[0-9]+$"
+selectedVersion=`echo "${availableVersions[inputVersion]}"| cut -d "/" -f6`
+while [ -z "$selectedVersion" ]; do
+  echo "Please select a valid index!"
+  read inputVersion
+  selectedVersion=`echo "${availableVersions[inputVersion]}" | cut -d "/" -f6`
+done
+
+version="$flutterVersionFolder/$selectedVersion"
+if [ ! -d "$version" ]; then
+  echo "Version $selectedVersion not intalled in $flutterVersionFolder"
+  exit 2
+fi
+
+rm "$pathFolder/flutter" >> /dev/null
+rm "$pathFolder/pub" >> /dev/null
+rm "$pathFolder/dart" >> /dev/null
+
+ln -s "$version/bin/flutter" "$pathFolder"
+ln -s "$version/bin/cache/dart-sdk/bin/dart" "$pathFolder"
+ln -s "$version/bin/cache/dart-sdk/bin/pub" "$pathFolder"
+
+echo "You are now using Flutter version $selectedVersion."
+

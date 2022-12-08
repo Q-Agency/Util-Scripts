@@ -3,7 +3,7 @@ Converter for Flutter developers which process all arb translation files to one 
 This document presents process of converting localization strings into formats suitable for translation **(csv/excel)**. This is applicable only when using https://plugins.jetbrains.com/plugin/13666-flutter-intl plugin.
 
 ## Converting to csv/excel format
-- Use https://github.com/kovaccc/Flutter-Intl---arb-to-csv script to convert all .arb translation files to one csv where keys and values are separated with commas
+- Use this script to convert all .arb translation files to one csv where keys and values are separated with commas
 - You will need to input absolute path to your application file and reference file where all strings are up-to-date which is in most cases **intl_en.arb** file
 - No worries if you entered wrong one, this script will pass through all .arb files in **l10n** directory and pick up all missing keys and put it into csv
 - You can find output csv in same directory **l10n**

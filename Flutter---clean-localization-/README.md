@@ -26,6 +26,8 @@ arb_generator:
 
 - Run clean_intl.py to remove unused descriptions and other unused strings from your .arb files by adding it to your application directory. You will maybe need to adjust root_folders variable in the script depending on your project structure
 
+- Be aware that the key search will include those expressions in the code that begin with s., S.of(context), S.current, other prefixes are not included. If you have an idea for improving this pattern, you are welcome to contribute
+
 <img width="290" alt="image" src="https://user-images.githubusercontent.com/75457058/206390556-20998396-003e-44a0-8e40-967711d43a8a.png"> 
 
 - You will get cleaned .arb files

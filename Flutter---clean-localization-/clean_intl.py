@@ -3,7 +3,7 @@ import json, os, re
 
 def check_if_key_exists(key_name, dart_files):
     pattern = re.compile(
-        r'(S\s*\.\s*current\s*\.\s*' + key_name + '|S\s*\.\s*of\(context\)\s*\.\s*' + key_name + '|[\s+,:\[]s\s*\.\s*' + key_name + '|s\s*\.\s*' + key_name + ')[\s.,():;\]\}]')
+        r'(S\s*\.\s*current\s*\.\s*' + key_name + '|S\s*\.\s*of\(context\)\s*\.\s*' + key_name + '|[\s+,:\[({]s\s*\.\s*' + key_name + ')[\s.,():;\]\}]')
     for file in dart_files:
         with open(file, 'r') as f:
             if pattern.search(f.read()):

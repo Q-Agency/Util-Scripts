@@ -32,7 +32,7 @@ for file_path in arb_paths:
 output_csv_file_path = app_translation_dir_path + "translations" + '.csv'
 
 # Write to csv
-with open(output_csv_file_path, mode='w', encoding='utf-8-sig') as csv_file:
+with open(output_csv_file_path, mode='w', encoding='utf-8-sig', newline='') as csv_file:
     allTranslationsKeys = []
     # create fieldnames for csv file key, en, fr, it...
     fieldnames = ['key', intl_reference_dictionary['@@locale']]
@@ -40,20 +40,28 @@ with open(output_csv_file_path, mode='w', encoding='utf-8-sig') as csv_file:
         fieldnames.append(dictionary['@@locale'])
 
     # create writer with fieldnames
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+    writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
+
+    writer.writeheader()
 
     for key in intl_reference_dictionary:
         if key.startswith('@') and key != '@@locale':
             continue
         # add en key and value because it is referent
         allTranslationsKeys.append(key)
-        mapToWrite = {'key': key, intl_reference_dictionary['@@locale']: intl_reference_dictionary[key]}
+        # Escape newlines and other escape sequences
+        reference_value = intl_reference_dictionary[key]
+        if isinstance(reference_value, str):
+            reference_value = reference_value.replace('\\', '\\\\').replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t')
+        mapToWrite = {'key': key, intl_reference_dictionary['@@locale']: reference_value}
         # go through all keys for each language and check if exists,
         # if yes then add it, otherwise just add empty string
         for dictionary in translation_dictionaries:
             translationText = ""
             if key in dictionary.keys():
                 translationText = dictionary[key]
+                if isinstance(translationText, str):
+                    translationText = translationText.replace('\\', '\\\\').replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t')
             mapToWrite[dictionary['@@locale']] = translationText
         writer.writerow(mapToWrite)
 
@@ -65,9 +73,14 @@ with open(output_csv_file_path, mode='w', encoding='utf-8-sig') as csv_file:
                     continue
                 else:
                     allTranslationsKeys.append(key)
-                    mapToWrite = {'key': key,
-                                  intl_reference_dictionary['@@locale']: intl_reference_dictionary.get(key, "")}
+                    reference_value = intl_reference_dictionary.get(key, "")
+                    if isinstance(reference_value, str):
+                        reference_value = reference_value.replace('\\', '\\\\').replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t')
+                    mapToWrite = {'key': key, intl_reference_dictionary['@@locale']: reference_value}
                     # go through all dictionaries again to pick up values for this key
                     for item in translation_dictionaries:
-                        mapToWrite[item['@@locale']] = item.get(key, "")
+                        translation_value = item.get(key, "")
+                        if isinstance(translation_value, str):
+                            translation_value = translation_value.replace('\\', '\\\\').replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t')
+                        mapToWrite[item['@@locale']] = translation_value
                     writer.writerow(mapToWrite)

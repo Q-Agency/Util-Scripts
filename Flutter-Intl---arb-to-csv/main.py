@@ -40,7 +40,7 @@ with open(output_csv_file_path, mode='w', encoding='utf-8-sig', newline='') as c
         fieldnames.append(dictionary['@@locale'])
 
     # create writer with fieldnames
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
+    writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
 
     writer.writeheader()
 
